@@ -1,0 +1,170 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Primary Meta Tags -->
+    <title>Chess game - HichemTech</title>
+    <meta name="title" content="Chess game - HichemTech">
+    <meta name="description" content="A simple Chess game built as Web page with (Html, JavaScript, Jquery, Css, Bootstrap).">
+    <meta property="image" content="https://hichemtab-tech.github.io/Chess-game/meta-data/picture.png">
+    <meta property="image:secure_url" content="https://hichemtab-tech.github.io/Chess-game/meta-data/picture.png" />
+    <meta property="image:alt" content="Chess game (Logo)" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://hichemtab-tech.github.io/Chess-game">
+    <meta property="og:title" content="Chess game - HichemTech">
+    <meta property="og:description" content="A simple Chess game built as Web page with (Html, JavaScript, Jquery, Css, Bootstrap).">
+    <meta property="og:image" content="https://hichemtab-tech.github.io/Chess-game/meta-data/picture.png">
+    <meta property="og:image:secure_url" content="https://hichemtab-tech.github.io/Chess-game/meta-data/picture.png" />
+    <meta property="og:image:alt" content="Chess game (Logo)" />
+    <meta property="fb:app_id" content="717203739588036"/>
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://hichemtab-tech.github.io/Chess-game">
+    <meta property="twitter:title" content="Chess game - HichemTech">
+    <meta property="twitter:description" content="A simple Chess game built as Web page with (Html, JavaScript, Jquery, Css, Bootstrap).">
+    <meta property="twitter:image" content="https://hichemtab-tech.github.io/Chess-game/meta-data/picture.png">
+    <meta property="twitter:image:secure_url" content="https://hichemtab-tech.github.io/Chess-game/meta-data/picture.png" />
+    <meta property="twitter:image:alt" content="Chess game (Logo)" />
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+
+
+    <link href="assets/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div id="mainContent">
+    <div id="ground-parent">
+        <div class="cord-column1 cords"></div>
+        <div class="cord-row1 cords"></div>
+        <div id="ground">
+        </div>
+        <div id="soldiers_area">
+        </div>
+    </div>
+</div>
+
+<div class="modal custom_modals" tabindex="-1" id="welcome_modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img src="assets/img/logo_chess.png" class="logo_chess" alt="Logo Chess">
+                <button class="btn" onclick="playClicked()">Play</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal custom_modals" tabindex="-1" id="choose_extra_soldier">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h3>Choose a piece:</h3>
+                <div class="extra-pieces-list">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal custom_modals" tabindex="-1" id="winner_modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h3 id="end-game-status">Congratulations</h3>
+                <h2 id="win-text">PLAYER win</h2>
+                <button class="btn" onclick="replay()">Replay</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/1e2cef4965.js" crossorigin="anonymous"></script>
+<script src="assets/js/functions.js"></script>
+<script src="assets/js/Game.js"></script>
+<script src="assets/js/Soldier.js"></script>
+<script src="assets/js/Player.js"></script>
+
+<script>
+    var groundWidth;
+    var groundHeight;
+    var cellWidth;
+    var cellHeight;
+    var game;
+    $(document).ready(function () {
+        groundWidth = $("#ground").width();
+        groundHeight = $("#ground").height();
+        cellWidth = groundWidth / 8;
+        cellHeight = groundHeight / 8;
+        initializeGround();
+        showWelcome();
+    });
+
+    function replay() {
+        $("#winner_modal").modal('hide');
+        initializeGround();
+        initializeGame();
+    }
+    
+    function showWelcome() {
+        $("#welcome_modal").modal({backdrop: 'static', keyboard: false});
+        $("#welcome_modal").modal('show');
+    }
+
+    function playClicked() {
+        $("#welcome_modal").modal('hide');
+        initializeGame();
+    }
+    
+    function initializeGround() {
+        let content = '';
+        for (let i = 0; i < 8; i++) {
+            let rowContent = '';
+            for (let i2 = 0; i2 < 8; i2++) {
+                let class_ = "cell1";
+                if ((i % 2 === 0 && i2 % 2 === 0) || (i % 2 !== 0 && i2 % 2 !== 0)) {
+                    class_ = "cell0";
+                }
+                rowContent += '<div data-column="'+Game.columnsKeys.substr(i2, 1)+'" data-row="'+(i+1)+'" class="one-cell '+class_+'"><div class="one-cell-bg"></div></div>';
+            }
+            content += '<div class="one-row">'+rowContent+'</div>';
+        }
+        $('#ground').html(content);
+
+
+        let cord_column = '';
+        let cord_row = '';
+        for (let i = 0; i < 8; i++) {
+            cord_column += '<div class="one-cell-cord-column">'+Game.columnsKeys.substr(i, 1)+'</div>';
+            cord_row += '<div class="one-cell-cord-row">'+(i+1)+'</div>';
+        }
+        $('.cord-column1').html(cord_column);
+        $('.cord-row1').html(cord_row);
+    }
+
+    function initializeGame() {
+        game = new Game();
+        game.initializeGame();
+        game.startGame();
+    }
+</script>
+
+</body>
+</html>
